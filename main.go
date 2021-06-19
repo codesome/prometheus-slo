@@ -89,10 +89,6 @@ func makeRule(ai alertInput) (rr []recordingRule, ar []alertRule) {
 			Record: fmt.Sprintf("cluster_namespace:%s_%s_requests_total:rate%s", ai.Service, ai.SloName, w),
 			Expr:   fmt.Sprintf("avg_over_time(cluster_namespace:%s_%s_requests_total:rate1h[%s])", ai.Service, ai.SloName, w),
 		})
-		rr = append(rr, recordingRule{
-			Record: fmt.Sprintf("cluster_namespace:%s_%s_success_per_request:rate%s", ai.Service, ai.SloName, w),
-			Expr:   fmt.Sprintf("avg_over_time(cluster_namespace:%s_%s_success_per_request:rate1h[%s])", ai.Service, ai.SloName, w),
-		})
 	}
 
 	// Some rules for the ratios.
