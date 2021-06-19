@@ -4,21 +4,21 @@ slo_files:
       slo_name: writes
       alertname: CortexWriteErrorBudgetBurn
       alert_summary: Cortex burns its write error budget too fast.
-      success_query: sum by (cluster, namespace) (rate(cortex_request_duration_seconds_bucket{status_code!~"5..", le=~"1|1\\.0"}[%s]))
-      total_query: sum by (cluster, namespace) (rate(cortex_request_duration_seconds_count[%s]))
+      success_query: sum by (cluster, namespace) (rate(cortex_request_duration_seconds_bucket{status_code!~"5..", le=~"1|1\\.0"}[$__range]))
+      total_query: sum by (cluster, namespace) (rate(cortex_request_duration_seconds_count[$__range]))
       threshold: 99.9
     - service: cortex
       slo_name: reads
       alertname: CortexReadErrorBudgetBurn
       alert_summary: Cortex burns its read error budget too fast.
-      success_query: sum by (cluster, namespace) (rate(querier_request_duration_seconds_bucket{status_code!~"5..", le=~"5|5\\.0"}[%s]))
-      total_query: sum by (cluster, namespace) (rate(querier_request_duration_seconds_count[%s]))
+      success_query: sum by (cluster, namespace) (rate(querier_request_duration_seconds_bucket{status_code!~"5..", le=~"5|5\\.0"}[$__range]))
+      total_query: sum by (cluster, namespace) (rate(querier_request_duration_seconds_count[$__range]))
       threshold: 99.5
   example.yaml:
     - service: example_service
       slo_name: writes
       alertname: ExampleWriteErrorBudgetBurn
       alert_summary: Example service burns its write error budget too fast.
-      success_query: sum by (cluster, namespace) (rate(example_request_duration_seconds_bucket{status_code!~"5..", le=~"2.5"}[%s]))
-      total_query: sum by (cluster, namespace) (rate(example_request_duration_seconds_count[%s]))
+      success_query: sum by (cluster, namespace) (rate(example_request_duration_seconds_bucket{status_code!~"5..", le=~"2.5"}[$__range]))
+      total_query: sum by (cluster, namespace) (rate(example_request_duration_seconds_count[$__range]))
       threshold: 99.99

@@ -23,8 +23,12 @@ slo_files:
       slo_name: <string> # SLO name
       alertname: <string> # Name of the SLO alert
       alert_summary: <string> # Summary of this alert
-      success_query: <string> # PromQL query giving the count of requests *within SLO*
-      total_query: <string> # PromQL query giving the total count of requests
+      # PromQL query giving the count of requests *within SLO*.
+      # Put $__range for the range in the range selector.
+      success_query: <string>
+      # PromQL query giving the total count of requests.
+      # Put $__range for the range in the range selector.
+      total_query: <string> 
       threshold: <string> # Quantile values in terms of %, example: 99.9, 99.95
 
 ```

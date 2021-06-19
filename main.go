@@ -6,6 +6,7 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"log"
+	"strings"
 
 	"gopkg.in/yaml.v2"
 )
@@ -69,12 +70,12 @@ func makeRule(ai alertInput) (rr []recordingRule, ar []alertRule) {
 		// Rule for the numerator: rate of successful requests.
 		rr = append(rr, recordingRule{
 			Record: fmt.Sprintf("cluster_namespace:%s_%s_successful_requests_total:rate%s", ai.Service, ai.SloName, w),
-			Expr:   fmt.Sprintf(ai.SuccessQuery, w),
+			Expr:   strings.ReplaceAll(ai.SuccessQuery, "$__range", w),
 		})
 		// Rule for the denominator: rate of total requests.
 		rr = append(rr, recordingRule{
 			Record: fmt.Sprintf("cluster_namespace:%s_%s_requests_total:rate%s", ai.Service, ai.SloName, w),
-			Expr:   fmt.Sprintf(ai.TotalQuery, w),
+			Expr:   strings.ReplaceAll(ai.TotalQuery, "$__range", w),
 		})
 	}
 
