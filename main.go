@@ -71,7 +71,7 @@ func makeRule(ai alertInput) (rr []recordingRule, ar []alertRule) {
 			Record: fmt.Sprintf("cluster_namespace:%s_%s_successful_requests_total:rate%s", ai.Service, ai.SloName, w),
 			Expr:   fmt.Sprintf(ai.SuccessQuery, w),
 		})
-		// Rule for the denominator: rate of successful requests.
+		// Rule for the denominator: rate of total requests.
 		rr = append(rr, recordingRule{
 			Record: fmt.Sprintf("cluster_namespace:%s_%s_requests_total:rate%s", ai.Service, ai.SloName, w),
 			Expr:   fmt.Sprintf(ai.TotalQuery, w),
@@ -125,6 +125,17 @@ func makeRule(ai alertInput) (rr []recordingRule, ar []alertRule) {
 	return rr, ar
 }
 
+var shortSloRecordWindows = []string{"5m", "30m", "1h"}
+
+var longSloRecordWindows = []string{"2h", "6h", "1d", "3d"}
+
+var sloAlertWindows = []sloAlertWindow{
+	{longPeriod: "1h", shortPeriod: "5m", forPeriod: "2m", factor: 14.4, severity: "critical"},
+	{longPeriod: "6h", shortPeriod: "30m", forPeriod: "15m", factor: 6, severity: "critical"},
+	{longPeriod: "1d", shortPeriod: "2h", forPeriod: "1h", factor: 3, severity: "warning"},
+	{longPeriod: "3d", shortPeriod: "6h", forPeriod: "3h", factor: 1, severity: "warning"},
+}
+
 type alertInput struct {
 	Service      string `yaml:"service"`
 	SloName      string `yaml:"slo_name"`
@@ -151,17 +162,6 @@ type alertRule struct {
 	For         string            `yaml:"for"`
 	Labels      map[string]string `yaml:"labels"`
 	Annotations map[string]string `yaml:"annotations"`
-}
-
-var shortSloRecordWindows = []string{"5m", "30m", "1h"}
-
-var longSloRecordWindows = []string{"2h", "6h", "1d", "3d"}
-
-var sloAlertWindows = []sloAlertWindow{
-	{longPeriod: "1h", shortPeriod: "5m", forPeriod: "2m", factor: 14.4, severity: "critical"},
-	{longPeriod: "6h", shortPeriod: "30m", forPeriod: "15m", factor: 6, severity: "critical"},
-	{longPeriod: "1d", shortPeriod: "2h", forPeriod: "1h", factor: 3, severity: "warning"},
-	{longPeriod: "3d", shortPeriod: "6h", forPeriod: "3h", factor: 1, severity: "warning"},
 }
 
 type sloAlertWindow struct {
